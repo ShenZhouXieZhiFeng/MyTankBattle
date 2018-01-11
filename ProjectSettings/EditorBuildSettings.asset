@@ -4,4 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/_3RD/TankReference/Scenes/Menu/LobbyScene.unity
+    guid: 36e75a5ad0c2df847b41f2c664f486c6
+  - enabled: 1
+    path: Assets/_3RD/TankReference/Scenes/Singleplayer/Mission1_MoveAndShoot.unity
+    guid: 533f0f2ec7e5c438c8faba3e176ef2cf
