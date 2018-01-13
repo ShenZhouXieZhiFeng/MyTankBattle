@@ -2,19 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public abstract class BaseUnit : MonoBehaviour
 {
-    #region SetFromInspect
-    [Header("MaxSpeed")]
+    #region Fields
+    [Header("能量")]
     [SerializeField]
-    protected float MaxSpeed = 20f;
-    [Header("MinSpeed")]
+    protected int energy = 100;
+    [Header("当前速度")]
     [SerializeField]
-    protected float MinSpeed = 5f;
+    protected float curSpeed = 20f;
+    [Header("当前旋转")]
+    [SerializeField]
+    protected float curRatate = 20f;
+    [Header("质量")]
+    [SerializeField]
+    protected float mass = 5;
+
+    private int damage = 0;
+    private DamagedType damagedLevel = DamagedType.ZeroGrade;
+    private Rigidbody m_rigidbody;
     #endregion
 
-    #region Members
-    private int energy = 100;
+    #region Get A Set
+
     /// <summary>
     /// 能量
     /// </summary>
@@ -24,7 +35,6 @@ public abstract class BaseUnit : MonoBehaviour
         protected set { energy = value; }
     }
 
-    private int damage = 0;
     /// <summary>
     /// 破损程度,0-100
     /// </summary>
@@ -57,12 +67,10 @@ public abstract class BaseUnit : MonoBehaviour
                 temp = DamagedType.DiedGrade;
             }
             //计算当前最大速度
-            curMaxSpeed = Mathf.Lerp(MaxSpeed, MinSpeed, (int)temp / 4);
             damagedLevel = temp;
         }
     }
 
-    private DamagedType damagedLevel = DamagedType.ZeroGrade;
     /// <summary>
     /// 破损级别，根据破损程度自动维护
     /// </summary>
@@ -71,38 +79,34 @@ public abstract class BaseUnit : MonoBehaviour
         get { return damagedLevel; }
     }
 
-    private float curMaxSpeed;
     /// <summary>
-    /// 当前最大速度，根据破损级别自动调整
+    /// 当前移动速度
     /// </summary>
-    public float CurMaxSpeed
+    protected float CurMoveSpeed
     {
-        get { return curMaxSpeed; }
+        get {
+            return MRigidbody.velocity.magnitude;
+        }
+        set {
+            MRigidbody.velocity = transform.forward * value * (curSpeed / Mass);
+        }
     }
 
-    [SerializeField]
-    private Vector3 currentMove;
     /// <summary>
-    /// 当前移动速度，包含横向和纵向
+    /// 当前旋转
     /// </summary>
-    public Vector3 CurrentMove
+    protected float CurRotation
     {
-        get { return currentMove; }
-        protected set { currentMove = value; }
+        get
+        {
+            return MRigidbody.angularVelocity.magnitude;
+        }
+        set
+        {
+            MRigidbody.angularVelocity = transform.up * value * (curRatate / Mass);
+        }
     }
-
-    [SerializeField]
-    private Vector3 currentAcceleratedMove;
-    /// <summary>
-    /// 当前加速度，横纵向
-    /// </summary>
-    public Vector3 CurrentAcceleratedMove
-    {
-        get { return currentAcceleratedMove; }
-        protected set { currentAcceleratedMove = value; }
-    }
-
-    private float mass = 5;
+    
     /// <summary>
     /// 质量
     /// </summary>
@@ -110,6 +114,33 @@ public abstract class BaseUnit : MonoBehaviour
     {
         get { return mass; }
         protected set { mass = value; }
+    }
+
+    /// <summary>
+    /// 刚体
+    /// </summary>
+    protected Rigidbody MRigidbody
+    {
+        get {
+            if (m_rigidbody == null)
+                m_rigidbody = GetComponent<Rigidbody>();
+            return m_rigidbody;
+        }
+    }
+
+    #endregion
+
+    #region Func
+
+    /// <summary>
+    /// 更新速度和旋转
+    /// </summary>
+    /// <param name="_vel"></param>
+    /// <param name="_rota"></param>
+    protected void UpdateUnit(float _vel,float _rota)
+    {
+        CurMoveSpeed = _vel;
+        CurRotation = _rota;
     }
 
     #endregion
