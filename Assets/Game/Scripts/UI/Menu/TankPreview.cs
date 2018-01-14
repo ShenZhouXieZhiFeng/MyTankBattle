@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 namespace TankBattle
 {
@@ -16,6 +17,8 @@ namespace TankBattle
         [SerializeField]
         private RotationDirection tankRotationDirection = RotationDirection.Right;
 
+        public GameObject TankPrefab;
+
         Transform tank_rotation;
         bool isDrag = false;
         float startEnglY;
@@ -23,6 +26,7 @@ namespace TankBattle
         void Start()
         {
             tank_rotation = transform.Find("TankRotation");
+            loadTank(TankPrefab);
         }
 
         void Update()
@@ -38,6 +42,16 @@ namespace TankBattle
                 tank_rotation.Rotate(transform.up, selfRotationSpeed);
             else
                 tank_rotation.Rotate(transform.up, -selfRotationSpeed);
+        }
+
+        void loadTank(GameObject _tankPrefab)
+        {
+            GameObject tank = Instantiate(_tankPrefab);
+            tank.transform.parent = tank_rotation;
+            tank.transform.position = Vector3.zero;
+            tank.transform.rotation = Quaternion.Euler(Vector3.zero);
+            tank.transform.localScale = Vector3.zero;
+            tank.transform.DOScale(Vector3.one, 2);
         }
 
         public void BeginDrag()
