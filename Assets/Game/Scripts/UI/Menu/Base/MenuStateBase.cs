@@ -12,6 +12,9 @@ namespace TankBattle
         [HideInInspector]
         public MenuPanelType MenuType = MenuPanelType.Cover;
 
+        /// <summary>
+        /// 状态控制实例
+        /// </summary>
         protected MenuStateManager m_manager;
 
         public virtual void InitState(MenuStateManager _manager)
@@ -21,7 +24,7 @@ namespace TankBattle
 
         public virtual void EnterPanel()
         {
-
+            gameObject.SetActive(true);
         }
 
         /// <summary>

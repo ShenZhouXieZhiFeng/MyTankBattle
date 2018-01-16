@@ -18,7 +18,7 @@ namespace TankBattle
 
         private Vector2 m_startingPosition;
 
-        void Start()
+        private void Start()
         {
             m_image = GetComponent<RawImage>();
             m_rect = GetComponent<RectTransform>();
@@ -42,18 +42,21 @@ namespace TankBattle
             m_image.texture = m_texture;
         }
 
-        private void OnRectTransformDimensionsChange()
-        {
-            if (enabled && gameObject.activeInHierarchy)
-            {
-                updateTexture();
-            }
-        }
+        //private void OnRectTransformDimensionsChange()
+        //{
+        //    if (enabled && gameObject.activeInHierarchy)
+        //    {
+        //        updateTexture();
+        //    }
+        //}
 
         private void OnEnable()
         {
-            if(m_camera)
+            if (m_camera)
+            {
                 m_camera.enabled = true;
+                updateTexture();
+            }
         }
 
         private void OnDisable()

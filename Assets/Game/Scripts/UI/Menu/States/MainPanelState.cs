@@ -14,7 +14,6 @@ namespace TankBattle
         public override void EnterPanel()
         {
             base.EnterPanel();
-            gameObject.SetActive(true);
         }
 
         public override void UpdatePanel()
